@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TaskManager.Auth;
 
 namespace TaskManager.Controllers
 {
@@ -11,6 +13,15 @@ namespace TaskManager.Controllers
     [ApiController]
     public class TaskController : ControllerBase
     {
+        [HttpGet]
+        [Authorize(Roles = UserRoles.ROLE_ADMIN)]
+        public List<Task> GetAdminTasks()
+        {
+            return new List<Task>();
+        }
+
+        [HttpGet]
+        [Authorize]
         public List<Task> GetTasks()
         {
             Task t1 = new Task
