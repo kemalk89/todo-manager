@@ -6,14 +6,5 @@ namespace TaskManager.Auth
     [ApiController]
     public class UserController : Controller
     {
-        private ApplicationDbContext _context;
-
-        public UserController(ApplicationDbContext context)
-        {
-
-
-                      _context = context;
-        }
-
     }
 }

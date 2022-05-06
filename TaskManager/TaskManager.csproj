@@ -14,6 +14,8 @@
     <None Remove="Auth\" />
     <None Remove="Npgsql.EntityFrameworkCore.PostgreSQL" />
     <None Remove="Migrations\" />
+    <None Remove="Shared\" />
+    <None Remove="Tasks\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.24">
@@ -30,5 +32,7 @@
     <Folder Include="Models\" />
     <Folder Include="Auth\" />
     <Folder Include="Migrations\" />
+    <Folder Include="Shared\" />
+    <Folder Include="Tasks\" />
   </ItemGroup>
 </Project>

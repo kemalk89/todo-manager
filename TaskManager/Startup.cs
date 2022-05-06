@@ -43,7 +43,7 @@ namespace TaskManager
             });
 
             services.AddControllers(); 
-            services.AddDbContext<ApplicationDbContext>(options =>
+            services.AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ApplicationContext")));
         }
 
@@ -53,6 +53,7 @@ namespace TaskManager
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                DbSeed.SeedDb();
             }
 
             app.UseRouting();
