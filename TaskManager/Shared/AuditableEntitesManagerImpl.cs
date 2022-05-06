@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace TaskManager.Shared
 {
-    public class DbContextHelper
+    public class AuditableEntitesManagerImpl : AuditableEntitiesManager
     {
-        internal static void HandleAuditableEntitiesBeforeSaving(ChangeTracker changeTracker)
+        public void ProcessBeforeSave(ChangeTracker changeTracker, User currentUser)
         {
             var entries = changeTracker.Entries();
             var now = DateTime.Now;
@@ -15,8 +15,13 @@ namespace TaskManager.Shared
             {
                 if (entry.Entity is AuditableEntity auditable)
                 {
+
                     if (entry.State == EntityState.Added)
                     {
+                        if (currentUser != null)
+                        {
+                            auditable.CreatedBy = currentUser;
+                        }
                         auditable.CreatedAt = now;
                     }
                     else if (entry.State == EntityState.Modified)

@@ -11,6 +11,7 @@ namespace TaskManager.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class TasksController : ControllerBase
     {
 
@@ -34,10 +35,11 @@ namespace TaskManager.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<ActionResult<IEnumerable<Todo>>> GetTasks()
         {
-            var tasks = await _context.Tasks.Select(x => x).ToListAsync();
+            var tasks = await _context.Tasks
+                .Include(t => t.CreatedBy) // eager loading of CreatedBy
+                .ToListAsync();
             return tasks;
         }
 
@@ -100,6 +102,82 @@ namespace TaskManager.Controllers
             }
 
             return NoContent();
+        }
+
+        [HttpPost("{id}/comments")]
+        public async Task<ActionResult<TodoCommentDTO>> SaveTaskComment(int id, TodoCommentDTO dto)
+        {
+            var todo = await _context.Tasks.FindAsync(id);
+            if (todo == null)
+            {
+                return NotFound();
+            }
+
+            var comment = dto.ToTodoComment();
+            todo.Comments.Add(comment);
+            await _context.SaveChangesAsync();
+
+            var routeValues = new
+            {
+                id,
+                commentId = comment.Id
+            };
+            return CreatedAtAction(nameof(GetTodoComment), routeValues, TodoCommentDTO.Create(comment));
+        }
+
+        [HttpDelete("{id}/comments/{commentId}")]
+        public async Task<IActionResult> DeleteTaskComment(int id, int commentId)
+        {
+            //var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //var moo = User.Identity;
+            //var moo = System.Security.Principal.WindowsIdentity.GetCurrent();
+            var todo = await _context.Tasks.FindAsync(id);
+            if (todo == null)
+            {
+                return NotFound();
+            }
+
+            var comment = todo.Comments.Select(x => x).ToList().Find(x => x.Id == commentId);
+            //var comment = todo.Comments.Find(x => x.Id == commentId);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            todo.Comments.Remove(comment);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpGet("{id}/comments/{commentId}")]
+        public async Task<ActionResult<TodoComment>> GetTodoComment(int id, int commentId)
+        {
+            var todo = await _context.Tasks.FindAsync(id);
+            if (todo == null)
+            {
+                return NotFound();
+            }
+
+            var comment = todo.Comments.Find(x => x.Id == commentId);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            return comment;
+        }
+
+        [HttpGet("{id}/comments")]
+        public async Task<ActionResult<IEnumerable<TodoComment>>> GetTodoComments(int id)
+        {
+            var todo = await _context.Tasks.FindAsync(id);
+            if (todo == null)
+            {
+                return new List<TodoComment>();
+            }
+
+            return todo.Comments;
         }
 
         private bool IsExistingTodo(int id)

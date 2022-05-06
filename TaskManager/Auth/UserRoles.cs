@@ -1,5 +1,4 @@
-﻿using System;
-namespace TaskManager.Auth
+﻿namespace TaskManager.Auth
 {
     public class UserRoles
     {

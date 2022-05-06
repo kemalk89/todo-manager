@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TaskManager.Auth;
+using TaskManager.Shared;
 
 namespace TaskManager.Models
 {

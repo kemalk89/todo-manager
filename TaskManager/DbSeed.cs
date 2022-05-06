@@ -1,5 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using TaskManager.Auth;
+using TaskManager.Shared;
+using TaskManager.Tasks;
 
 namespace TaskManager
 {
@@ -32,6 +35,7 @@ namespace TaskManager
             {
                 context.Database.EnsureCreated();
 
+                var user = context.Users.First();
                 var tasks = context.Tasks.Select(x => x).ToList();
 
                 if (tasks.Count() == 0)
@@ -40,6 +44,15 @@ namespace TaskManager
                     {
                         Title = "Dummy Task",
                         Description = "This task will only be generated in development mode and only if no tasks exists in database.",
+                        CreatedBy = user,
+                        Comments = new List<TodoComment>
+                        {
+                            new TodoComment
+                            {
+                                Text = "This is a dummy comment.",
+                                CreatedBy = user
+                            }
+                        }
                     });
 
                     context.SaveChanges();

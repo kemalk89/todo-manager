@@ -1,14 +1,19 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using TaskManager.Auth;
 using TaskManager.Shared;
+using TaskManager.Tasks;
 
 namespace TaskManager
 {
     public class AppDbContext : DbContext
     {
+        private readonly AuditableEntitiesManager _auditableEntitiesManager;
+        private readonly IIdentityService _identityService;
+
         public DbSet<Todo> Tasks { get; set; }
+        public DbSet<TodoComment> TaskComments { get; set; }
         public DbSet<User> Users { get; set; }
 
         private readonly string Host = "localhost";
@@ -16,14 +21,17 @@ namespace TaskManager
         private readonly string DbUser = "postgres";
         private readonly string DbPw = "";
 
-        public AppDbContext()
-        {
+        public AppDbContext() {
             // this constructor is for the seeding process
         }
 
-        public AppDbContext(DbContextOptions<AppDbContext> options)
-            : base(options)
+        public AppDbContext(
+            AuditableEntitiesManager auditableEntitiesManager,
+            IIdentityService identityService,
+            DbContextOptions<AppDbContext> options) : base(options)
         {
+            _auditableEntitiesManager = auditableEntitiesManager;
+            _identityService = identityService;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder) =>
@@ -31,7 +39,14 @@ namespace TaskManager
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            DbContextHelper.HandleAuditableEntitiesBeforeSaving(ChangeTracker);
+            User currentUser = null;
+            var username = _identityService.GetUsername();
+            if (username != null)
+            {
+                currentUser = Users.Where(x => x.Username == username).Single();
+            }
+
+            _auditableEntitiesManager.ProcessBeforeSave(ChangeTracker, currentUser);
 
             return base.SaveChangesAsync(cancellationToken);
         }

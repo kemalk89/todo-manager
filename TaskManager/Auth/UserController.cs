@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace TaskManager.Auth
+namespace TaskManager.Shared
 {
     [Route("api/[controller]")]
     [ApiController]

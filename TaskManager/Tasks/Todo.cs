@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using TaskManager.Shared;
 using TaskManager.Tasks;
@@ -13,6 +13,8 @@ namespace TaskManager
         public string Title { get; set; }
 
         public string Description { get; set; }
+
+        public List<TodoComment> Comments { get; set; } = new List<TodoComment>();
 
         public void Update(TodoDTO dto)
         {

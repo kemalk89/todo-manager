@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using TaskManager.Models;
+using TaskManager.Shared;
 
 namespace TaskManager.Controllers
 {
@@ -15,11 +16,13 @@ namespace TaskManager.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
-        private IConfiguration configuration;
+        private readonly IConfiguration _configuration;
+        private readonly AppDbContext _context;
 
-        public LoginController(IConfiguration conf)
+        public LoginController(IConfiguration conf, AppDbContext context)
         {
-            configuration = conf;
+            _configuration = conf;
+            _context = context;
         }
 
         [AllowAnonymous]
@@ -36,9 +39,9 @@ namespace TaskManager.Controllers
             return NotFound("Username or password is wrong");
         }
 
-        private object GenerateToken(UserModel user)
+        private object GenerateToken(User user)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
@@ -48,8 +51,8 @@ namespace TaskManager.Controllers
             };
 
             var token = new JwtSecurityToken(
-                configuration["Jwt:Issuer"],
-                configuration["Jwt:Audience"],
+                _configuration["Jwt:Issuer"],
+                _configuration["Jwt:Audience"],
                 claims,
                 expires: DateTime.Now.AddMinutes(15),
                 signingCredentials: credentials
@@ -58,12 +61,9 @@ namespace TaskManager.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private UserModel Authenticate(UserLogin userLogin)
+        private User Authenticate(UserLogin userLogin)
         {
-            var user = UserConstants.GetUsers()
-                .FirstOrDefault(u =>
-                    u.Username.ToLower() == userLogin.Username.ToLower() && u.Password == userLogin.Password);
-
+            var user = _context.Users.Where(x => x.Username.ToLower() == userLogin.Username.ToLower()).Single();
             return user;
         }
 
