@@ -16,10 +16,38 @@ namespace TaskManager.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.16")
+                .HasAnnotation("ProductVersion", "5.0.17")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-            modelBuilder.Entity("TaskManager.Shared.User", b =>
+            modelBuilder.Entity("Domain.Project.Project", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int?>("CreatedById")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int?>("UpdatedById")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("UpdatedById");
+
+                    b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("Infrastructure.Auth.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -117,9 +145,24 @@ namespace TaskManager.Migrations
                     b.ToTable("Tasks");
                 });
 
+            modelBuilder.Entity("Domain.Project.Project", b =>
+                {
+                    b.HasOne("Infrastructure.Auth.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("Infrastructure.Auth.User", "UpdatedBy")
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
+
+                    b.Navigation("CreatedBy");
+
+                    b.Navigation("UpdatedBy");
+                });
+
             modelBuilder.Entity("TaskManager.Tasks.TodoComment", b =>
                 {
-                    b.HasOne("TaskManager.Shared.User", "CreatedBy")
+                    b.HasOne("Infrastructure.Auth.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
@@ -129,7 +172,7 @@ namespace TaskManager.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TaskManager.Shared.User", "UpdatedBy")
+                    b.HasOne("Infrastructure.Auth.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
 
@@ -142,11 +185,11 @@ namespace TaskManager.Migrations
 
             modelBuilder.Entity("TaskManager.Todo", b =>
                 {
-                    b.HasOne("TaskManager.Shared.User", "CreatedBy")
+                    b.HasOne("Infrastructure.Auth.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("TaskManager.Shared.User", "UpdatedBy")
+                    b.HasOne("Infrastructure.Auth.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
 

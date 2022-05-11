@@ -1,4 +1,4 @@
-﻿namespace TaskManager.Shared
+﻿namespace Infrastructure.Auth
 {
     public interface IIdentityService
     {

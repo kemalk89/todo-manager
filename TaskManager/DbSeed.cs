@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Infrastructure.Auth;
 using TaskManager.Auth;
-using TaskManager.Shared;
 using TaskManager.Tasks;
 
 namespace TaskManager

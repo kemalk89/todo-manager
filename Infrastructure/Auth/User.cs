@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace TaskManager.Shared
+namespace Infrastructure.Auth
 {
     [Index(nameof(Username), IsUnique = true)]
     public class User

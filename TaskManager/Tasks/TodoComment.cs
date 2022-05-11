@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using TaskManager.Shared;
+using Infrastructure.Entity;
 
 namespace TaskManager.Tasks
 {

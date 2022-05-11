@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+﻿using Infrastructure.Auth;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace TaskManager.Shared
+namespace Infrastructure.Entity
 {
     // this is a test comment!!!
     public interface AuditableEntitiesManager

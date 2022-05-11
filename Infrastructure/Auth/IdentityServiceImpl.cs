@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 
-namespace TaskManager.Shared
+namespace Infrastructure.Auth
 {
     public class IdentityServiceImpl : IIdentityService
     {

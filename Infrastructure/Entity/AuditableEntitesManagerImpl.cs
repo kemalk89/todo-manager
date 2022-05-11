@@ -1,8 +1,9 @@
 ﻿using System;
+using Infrastructure.Auth;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace TaskManager.Shared
+namespace Infrastructure.Entity
 {
     public class AuditableEntitesManagerImpl : AuditableEntitiesManager
     {

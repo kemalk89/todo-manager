@@ -1,8 +1,10 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Domain.Project;
+using Infrastructure.Auth;
+using Infrastructure.Entity;
 using Microsoft.EntityFrameworkCore;
-using TaskManager.Shared;
 using TaskManager.Tasks;
 
 namespace TaskManager
@@ -15,6 +17,7 @@ namespace TaskManager
         public DbSet<Todo> Tasks { get; set; }
         public DbSet<TodoComment> TaskComments { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Project> Projects { get; set; }
 
         private readonly string Host = "localhost";
         private readonly string DbName = "postgres";

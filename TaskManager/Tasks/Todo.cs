@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using TaskManager.Shared;
+using Infrastructure.Entity;
 using TaskManager.Tasks;
 
 namespace TaskManager

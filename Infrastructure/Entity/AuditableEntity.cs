@@ -1,7 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Infrastructure.Auth;
 
-namespace TaskManager.Shared
+namespace Infrastructure.Entity
 {
     public abstract class AuditableEntity
     {
