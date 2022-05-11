@@ -1,11 +1,12 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Domain.Booking;
 using Domain.Project;
+using Domain.Task;
 using Infrastructure.Auth;
 using Infrastructure.Entity;
 using Microsoft.EntityFrameworkCore;
-using TaskManager.Tasks;
 
 namespace TaskManager
 {
@@ -18,13 +19,14 @@ namespace TaskManager
         public DbSet<TodoComment> TaskComments { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Project> Projects { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
 
         private readonly string Host = "localhost";
         private readonly string DbName = "postgres";
         private readonly string DbUser = "postgres";
         private readonly string DbPw = "";
 
-        public AppDbContext() {
+        public AppDbContext() : base() {
             // this constructor is for the seeding process
         }
 

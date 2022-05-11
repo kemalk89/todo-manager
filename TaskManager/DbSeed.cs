@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Domain.Task;
 using Infrastructure.Auth;
 using TaskManager.Auth;
-using TaskManager.Tasks;
 
 namespace TaskManager
 {
